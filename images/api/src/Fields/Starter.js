@@ -7,8 +7,15 @@ class Starter {
     this.assignFields = this.assignFields.bind(this);
   }
 
+
   assignFields(app, pg) {
     const _this = this;
+
+    /**
+     * 
+     * @param 
+     * @returns the contents of the starter table
+     */
     app.get('/starter', async (req, res, next) => {
       console.log('init');
       await pg

@@ -1,4 +1,5 @@
 const express = require('express');
+const uuidv1 = require('uuid');
 const http = require('http');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -84,7 +85,7 @@ class App {
 
   async initialiseTables(pg) {
     await pg.schema.hasTable('starter').then(async (exists) => {
-      if (!exists)
+      if (!exists) {
         await pg.schema
           .createTable('starter', (table) => {
             table.increments();
@@ -92,11 +93,15 @@ class App {
             table.string('title');
             table.timestamps(true, true);
           })
-          .then(() => {
+          .then(async () => {
             console.log('created table starter');
+            for (let i = 0; i < 10; i++) {
+              const uuid = uuidv1();
+              await pg.table('starter').insert({ uuid, title: `random element number ${i}` })
+            }
           });
+      }
     });
-
     this.hasSetup = true;
   }
 }
