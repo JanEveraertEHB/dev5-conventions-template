@@ -1,0 +1,38 @@
+{
+  "name": "starter",
+  "version": "0.4.0",
+  "devDependencies": {
+    "npm-run-all": "4.1.1",
+    "prettier": "^1.8.2"
+  },
+  "scripts": {
+    "build:images": "docker-compose build",
+    "build": "docker-compose -f docker-compose.yml -f docker-compose.yml up",
+    "log:containers": "docker ps -a | grep starter",
+    "serve": "docker-compose -f docker-compose.yml -f docker-compose.yml up",
+    "start": "NODE_ENV=production run-s build:images build serve log:containers",
+    "reboot:prod": "run-s serve:prod",
+    "stop:admin": "docker stop starter_admin",
+    "stop:front": "docker stop starter_front",
+    "stop:api": "docker stop starter_api",
+    "stop": "docker-compose stop",
+    "remove": "docker-compose rm starter_admin_server -f docker-compose rm starter_front_server",
+    "format": "prettier --single-quote --trailing-comma none --arrow-parens always --write '{images/admin/src,images/front/src,images/api/src}/**/*.js*'",
+    "log:version": "node version.js",
+    "log:commit": "git rev-parse --short HEAD"
+  },
+  "engines": {
+    "node": ">=8.6.0"
+  },
+  "contributors": [
+    {
+      "name": "Jan Everaert",
+      "email": "jan.everaert@imec.be"
+    }
+  ],
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@fortawesome/fontawesome-free-solid": "^5.0.13"
+  }
+}

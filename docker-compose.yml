@@ -1,0 +1,61 @@
+version: '2'
+
+services:
+  front:
+    build:
+      context: ./images/front/
+    container_name: starter_front
+    environment:
+      REACT_APP_VERSION_NUMBER: ${APP_VERSION_NUMBER}
+      REACT_APP_VERSION_LABEL: ${APP_VERSION_LABEL}
+      REACT_APP_API_URL:
+      DOMAIN:
+    volumes:
+      - ./images/front/public:/starter/public
+      - ./images/front/src:/starter/src
+      - "./images/front/build:/starter/build"
+    command: ["npm", "run", "build:serve"]
+    environment:
+      REACT_APP_API_URL: "http://api.${DOMAIN}"
+    ports: 
+      - 3000:3000
+  
+  api:
+    build:
+      context: ./images/api/
+    container_name: starter_api
+    volumes:
+      - ./images/api/src:/starter/src
+    networks:
+      - default
+    environment:
+      APP_VERSION_NUMBER:
+      APP_VERSION_LABEL:
+      PG_CONNECTION_STRING: postgres://${STORE_POSTGRES_USER}:${STORE_POSTGRES_PASSWORD}@store:${STORE_PORT}/${STORE_POSTGRES_DB}
+      DOMAIN:
+    depends_on:
+     - broker
+     - store
+    ports: 
+      - 3001:3000
+
+  broker:
+    container_name: starter_broker
+    image: redis:alpine
+    networks:
+      - default
+    ports:
+      - ${BROKER_PORT}:6379
+
+  store:
+    build:
+      context: ./images/store
+    container_name: starter_store
+    networks:
+      - default
+    ports: 
+      - ${STORE_PORT}:5432
+    volumes:
+      - ./images/store:/var/lib/postgresql
+      - ./_volumes/store-starter:/var/lib/postgresql/data
+

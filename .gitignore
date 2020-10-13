@@ -1,0 +1,7 @@
+/images/front/build
+
+/images/front/node_modules
+/images/api/node_modules
+/node_modules
+
+/_volumes/
